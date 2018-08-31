@@ -9,9 +9,16 @@ public class Main {
 
     public static void main(String[] args) {
         Codalot codalot = new Codalot();
-
+        int n;
+        n=(args.length > 0)?Integer.parseInt(args[0]):12;
+        //if (args.length > 0) {
+        //    n = Integer.parseInt(args[0]);
+        //}
+        //else{
+        //    n = 12;
+        //}
         ArrayList<Knight> knights = new ArrayList<Knight>();
-        for (int i = 0; i < 6; ++i) {
+        for (int i = 0; i < n; ++i) {
             knights.add(new Knight());
         }
 
