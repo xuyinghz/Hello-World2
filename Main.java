@@ -9,8 +9,10 @@ public class Main {
 
     public static void main(String[] args) {
         Codalot codalot = new Codalot();
+
+// need more work on this, at least 12, error handling?
         int n;
-        n=(args.length > 0)?Integer.parseInt(args[0]):12;
+        n=(args.length > 0)?Integer.parseInt(args[0]) : 12;
         //if (args.length > 0) {
         //    n = Integer.parseInt(args[0]);
         //}
@@ -35,8 +37,9 @@ public class Main {
             }
             codalot.process();
         }
-        codalot.grantBonusXp();
-
+        //codalot.grantBonusXp();
+        codalot.grantBonusXpbyRanking();
+        
         int totalXp = 0;
         for (Knight knight : knights) {
             totalXp += knight.getXp();
@@ -113,6 +116,7 @@ public class Main {
             knight.setInTavern(false);
         }
 
+
         public void addKnightToTavern(Knight knight) {
             knights.add(knight);
             knight.setInTavern(true);
@@ -122,7 +126,7 @@ public class Main {
         public void process() {
             for (Knight knight : knights) {
                 knight.incrementStamina(knight.isInTavern ? 1 : -1);
-                knight.incrementXp(knight.isInTrainingYard ? 1 : 0);
+                knight.incrementXp((knight.isInTrainingYard && knight.getStamina()!=0) ? 1 : 0);
             }
         }
 
@@ -133,21 +137,25 @@ public class Main {
                     bonusKnights++;
                 }
             }
-            if (bonusKnights == 3) {
+            int bonusscale = (int)(knights.size()/6);
+            System.out.println(String.format("bonusscale is %d ", bonusscale));
+            int bonuspool = knights.size();
+            System.out.println(String.format("bonuspool is %d ", bonuspool));
+            if (bonusKnights == 3*bonusscale) {
                 for (Knight knight : knights) {
                     if (knight.getXp() >= 3) {
                         knight.setXp(knight.getXp() + 5);
                     }
                 }
             }
-            if (bonusKnights == 5) {
+            if (bonusKnights == 5*bonusscale) {
                 for (Knight knight : knights) {
                     if (knight.getXp() >= 3) {
                         knight.setXp(knight.getXp() + 10);
                     }
                 }
             }
-            if (bonusKnights == 6) {
+            if (bonusKnights == 6*bonusscale) {
                 for (Knight knight : knights) {
                     if (knight.getXp() >= 3) {
                         knight.setXp(knight.getXp() + 20);
@@ -155,5 +163,31 @@ public class Main {
                 }
             }
         }
+        
+        public void grantBonusXpbyRanking() {
+            int bonusKnights = 0;
+            int maxXp = 0;
+            int totalBonus = knights.size();
+            int bonusPoint = 0;
+            System.out.println(String.format("totalBonus is %d ", totalBonus));
+            
+            for (Knight knight : knights) {
+                if (knight.getXp() > maxXp){
+                    maxXp = knight.getXp();
+                    bonusKnights = 1;
+                } else if (knight.getXp() == maxXp){
+                    bonusKnights += 1;
+                }
+            }
+           
+           bonusPoint = (int)(totalBonus / bonusKnights);
+           System.out.println(String.format("totalBonus is %d divided by %d knights, each got %d bonus", totalBonus, bonusKnights, bonusPoint));
+                for (Knight knight : knights) {
+                    if (knight.getXp() == maxXp) {
+                        knight.setXp(knight.getXp() + bonusPoint);
+                    }
+                }
+        }
     }
 }
+
