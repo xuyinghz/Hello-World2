@@ -1,4 +1,4 @@
 bikes =['Trek', 'redline','yongjiu','phoenix']
-for bike in bikes
+for bike in bikes:
   print(bike)
   
